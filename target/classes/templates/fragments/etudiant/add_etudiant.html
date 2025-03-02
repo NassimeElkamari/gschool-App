@@ -1,0 +1,55 @@
+<div th:fragment="content">
+    <h2 class="mb-4">Ajouter un Nouvel Étudiant</h2>
+
+    <form th:action="@{/etudiants/save}" th:object="${etudiant}" method="post" enctype="multipart/form-data">
+        <!-- Nom -->
+        <div class="mb-3">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control" th:field="*{nom}" required/>
+        </div>
+
+        <!-- Prénom -->
+        <div class="mb-3">
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-control" th:field="*{prenom}" required/>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" th:field="*{email}" required/>
+        </div>
+
+        <!-- Date de Naissance -->
+        <div class="mb-3">
+            <label class="form-label">Date de Naissance</label>
+            <input type="date" class="form-control" th:field="*{dateNaissance}" required/>
+        </div>
+
+        <!-- Code Étudiant -->
+        <div class="mb-3">
+            <label class="form-label">Code Étudiant</label>
+            <input type="text" class="form-control" th:field="*{codeEtudiant}" required/>
+        </div>
+
+        <!-- Filière (Dropdown) -->
+        <div class="mb-3">
+            <label class="form-label">Filière</label>
+            <select class="form-select" name="filiere" required>
+                <option value="">Sélectionner une filière</option>
+                <option th:each="filiere : ${filieres}" th:value="${filiere.id}" th:text="${filiere.nomFiliere}"></option>
+            </select>
+        </div>
+
+        <!-- Photo (File Upload) -->
+        <div class="mb-3">
+            <label class="form-label">Photo</label>
+            <input type="file" class="form-control" name="file" accept="image/*" />
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-success">Ajouter</button>
+        <a href="/etudiants" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+

@@ -1,0 +1,23 @@
+<div th:fragment="content" class="container mt-4">
+    <h2>Modifier l'Utilisateur</h2>
+
+    <form th:action="@{/utilisateurs/{id}(id=${utilisateur.id})}" method="post" th:object="${utilisateur}">
+        <div class="form-group">
+            <label>Nom</label>
+            <input type="text" class="form-control" th:field="*{nomUtilisateur}" required>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label>Rôle</label>
+            <select class="form-control" th:field="*{role}">
+                <option value="ADMIN">Admin</option>
+                <option value="USER">Utilisateur</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-warning">Modifier</button>
+        <a href="/utilisateurs" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>

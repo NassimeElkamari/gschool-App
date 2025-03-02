@@ -1,0 +1,45 @@
+<div th:fragment="content" class="container mt-4">
+    <h2>Liste des Filières</h2>
+
+    <a href="/filieres/new" class="btn btn-primary mb-3">+ Ajouter Filière</a>
+    <a href="/filieres/export/excel" class="btn btn-success mb-3">Exporter en Excel</a>
+    <a href="/filieres/export/pdf" class="btn btn-danger mb-3">Exporter en PDF</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="filiere : ${filieresPage.content}">
+            <td th:text="${filiere.id}"></td>
+            <td th:text="${filiere.nomFiliere}"></td>
+            <td th:text="${filiere.description}"></td>
+            <td>
+                <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}" class="btn btn-warning btn-sm">Modifier</a>
+                <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6">
+        <nav>
+            <ul class="pagination">
+                <li th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/filieres(page=${pageNumber}, size=${filieresPage.size})}"
+                       th:text="${pageNumber}"
+                       class="px-3 py-2 border rounded-lg hover:bg-blue-600 hover:text-white"
+                       th:classappend="${pageNumber == filieresPage.number + 1} ? 'bg-blue-600 text-white' : ''"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

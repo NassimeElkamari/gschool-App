@@ -1,0 +1,15 @@
+<div th:fragment="content">
+    <h2>Ajouter une Filière</h2>
+
+    <form th:action="@{/filieres/save}" th:object="${filiere}" method="post">
+        <div class="mb-3">
+            <label for="nomFiliere" class="form-label">Nom de la Filière</label>
+            <input type="text" id="nomFiliere" th:field="*{nomFiliere}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>

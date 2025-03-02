@@ -1,0 +1,10 @@
+<div th:fragment="content" class="container mt-4">
+    <h2>Supprimer la Filière</h2>
+    <p>Êtes-vous sûr de vouloir supprimer la filière <strong th:text="${filiere.nomFiliere}"></strong> ?</p>
+
+    <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit" class="btn btn-danger">Oui, Supprimer</button>
+        <a href="/filieres" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>

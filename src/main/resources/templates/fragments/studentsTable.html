@@ -1,0 +1,32 @@
+<div th:fragment="studentsTable">
+  <div class="overflow-x-auto">
+    <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-blue-600 text-white">
+      <tr>
+        <th class="py-2 px-4 text-left">Photo</th>
+        <th class="py-2 px-4 text-left">Nom</th>
+        <th class="py-2 px-4 text-left">Prénom</th>
+        <th class="py-2 px-4 text-left">Email</th>
+        <th class="py-2 px-4 text-left">Filière</th>
+        <th class="py-2 px-4 text-left">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="etudiant : ${etudiants}" class="border-b hover:bg-gray-100">
+        <td class="py-2 px-4 text-center">
+          <img th:src="${etudiant.photo}" alt="Photo" class="w-12 h-12 rounded-full border">
+        </td>
+        <td class="py-2 px-4" th:text="${etudiant.nom}"></td>
+        <td class="py-2 px-4" th:text="${etudiant.prenom}"></td>
+        <td class="py-2 px-4" th:text="${etudiant.email}"></td>
+        <td class="py-2 px-4" th:text="${etudiant.filiere != null ? etudiant.filiere.nomFiliere : 'Non Assignée'}"></td>
+        <td class="py-2 px-4 flex space-x-2">
+          <a th:href="@{/etudiants/edit/{id}(id=${etudiant.id})}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Modifier</a>
+          <a th:href="@{/etudiants/{id}/delete(id=${etudiant.id})}" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+             onclick="return confirm('Voulez-vous vraiment supprimer cet étudiant ?')">Supprimer</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

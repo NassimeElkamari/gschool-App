@@ -1,0 +1,47 @@
+<div th:fragment="content" class="container mt-4">
+  <h2>Liste des Utilisateurs</h2>
+
+  <a href="/utilisateurs/new" class="btn btn-primary mb-3">+ Ajouter Utilisateur</a>
+  <a href="/utilisateurs/export/excel" class="btn btn-success mb-3">Exporter en Excel</a>
+  <a href="/utilisateurs/export/pdf" class="btn btn-danger mb-3">Exporter en PDF</a>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Email</th>
+      <th>Rôle</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="utilisateur : ${utilisateursPage.content}">
+      <td th:text="${utilisateur.id}"></td>
+      <td th:text="${utilisateur.nomUtilisateur}"></td>
+      <td th:text="${utilisateur.email}"></td>
+      <td th:text="${utilisateur.role}"></td>
+      <td>
+        <a th:href="@{/utilisateurs/edit/{id}(id=${utilisateur.id})}" class="btn btn-warning btn-sm">Modifier</a>
+        <form th:action="@{/utilisateurs/{id}/delete(id=${utilisateur.id})}" method="post" style="display: inline;">
+          <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="flex justify-center mt-6">
+    <nav>
+      <ul class="pagination">
+        <li th:each="pageNumber : ${pageNumbers}">
+          <a th:href="@{/utilisateurs(page=${pageNumber}, size=${utilisateursPage.size})}"
+             th:text="${pageNumber}"
+             class="px-3 py-2 border rounded-lg hover:bg-blue-600 hover:text-white"
+             th:classappend="${pageNumber == utilisateursPage.number + 1} ? 'bg-blue-600 text-white' : ''"></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

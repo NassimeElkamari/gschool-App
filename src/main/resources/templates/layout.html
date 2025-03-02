@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+        }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .header {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .header .user-info {
+            font-size: 16px;
+        }
+        .content-wrapper {
+            display: flex;
+            width: 100%;
+            margin-top: 60px;
+        }
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
+            min-height: 100vh;
+            border-right: 2px solid #dee2e6;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: black;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .sidebar a:hover {
+            background: #e9ecef;
+        }
+        .sidebar a.active {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const userData = /*[[${userData}]]*/ null;
+
+        // Store user data in localStorage
+        if (userData) {
+            localStorage.setItem("userData", JSON.stringify(userData));
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+<div class="header">
+    <span>Dashboard</span>
+    <div class="user-info" id="userInfo">
+        <!-- User info will be populated by JavaScript -->
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <nav class="sidebar">
+        <ul>
+            <li><a href="/filieres" class="nav-link">📚 Filieres</a></li>
+            <li><a href="/etudiants" class="nav-link">🎓 Etudiants</a></li>
+            <li><a href="/utilisateurs" class="nav-link">👤 Utilisateurs</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div id="content" layout:fragment="content">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Retrieve user data from localStorage
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        document.getElementById("userInfo").innerHTML = `
+                👤 ${user.nomUtilisateur} | ${user.email}
+                <a href="#" style="margin-left: 10px; color: white; text-decoration: underline;" id="logoutLink">Déconnexion</a>
+            `;
+    } else {
+        document.getElementById("userInfo").innerHTML = "No user is logged in.";
+    }
+
+    // Handle logout
+    document.getElementById("logoutLink").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+
+        if (confirm("Are you sure you want to log out?")) {
+            // Clear localStorage
+            localStorage.removeItem("userData");
+
+            // Redirect to the login page
+            window.location.href = "/login";
+        }
+    });
+</script>
+<script>
+    function searchEtudiants() {
+        // Get search inputs
+        const searchByName = document.getElementById("searchByName").value;
+        const searchByEmail = document.getElementById("searchByEmail").value;
+        const searchByCode = document.getElementById("searchByCode").value;
+        const sortBy = document.getElementById("sortBy").value;
+
+        // Construct the URL with query parameters
+        const url = `/etudiants/search?name=${searchByName}&email=${searchByEmail}&code=${searchByCode}&sort=${sortBy}`;
+
+        // Send an AJAX request
+        fetch(url, {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest" // Indicate this is an AJAX request
+            }
+        })
+            .then(response => response.text()) // Parse the response as HTML
+            .then(html => {
+                // Update the table body with the new HTML
+                document.getElementById("etudiantsBody").innerHTML = html;
+            })
+            .catch(error => console.error("Error fetching search results:", error));
+    }
+
+    // Optional: Add debouncing
+    let timeoutId;
+    function debouncedSearchEtudiants() {
+        clearTimeout(timeoutId); // Clear the previous timeout
+        timeoutId = setTimeout(searchEtudiants, 300); // Wait 300ms before sending the request
+    }
+</script>
+
+</body>
+</html>

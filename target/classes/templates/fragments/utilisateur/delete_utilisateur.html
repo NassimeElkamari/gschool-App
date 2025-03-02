@@ -1,0 +1,10 @@
+<div th:fragment="content" class="container mt-4">
+    <h2>Supprimer l'Utilisateur</h2>
+
+    <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong th:text="${utilisateur.nomUtilisateur}"></strong> ?</p>
+
+    <form th:action="@{/utilisateurs/{id}/delete(id=${utilisateur.id})}" method="post">
+        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+        <a href="/utilisateurs" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
