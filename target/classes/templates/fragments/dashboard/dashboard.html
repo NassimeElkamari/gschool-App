@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Tableau de bord</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
+<body>
+
+<h1>Tableau de bord</h1>
+
+<div th:fragment="content">
+  <div>
+    <h2>Répartition des Filières</h2>
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <div>
+    <h2> Étudiants par Filière</h2>
+    <canvas id="barChart"></canvas>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  let predefinedColors = [
+    '#ff5733', // Rouge orangé
+    '#33ff57', // Vert clair
+    '#3357ff', // Bleu vif
+    '#ff33a8', // Rose flashy
+    '#ffcc33', // Jaune doré
+    '#8d33ff', // Violet
+    '#33fff5', // Bleu turquoise
+    '#ff3380', // Rose foncé
+    '#80ff33', // Vert lime
+    '#ff8233'  // Orange chaud
+  ];
+
+  function generateRandomColors(count, existingColors) {
+    let colors = [...existingColors];
+    while (colors.length < count) {
+      let color = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`; // Ajustement de luminosité
+      colors.push(color);
+    }
+    return colors;
+  }
+
+  var labels = [[${filieres}]];
+  var dataValues = [[${nombreEtudiants}]];
+  var colors = generateRandomColors(labels.length, predefinedColors);
+
+  // Graphique en camembert
+  const ctx1 = document.getElementById('pieChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: dataValues,
+        backgroundColor: colors,
+      }]
+    }
+  });
+
+  // Graphique en barres
+  const ctx2 = document.getElementById('barChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Nombre des Étudiants',
+        data: dataValues,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        yAxes: [{
+          ticks: { beginAtZero: true }
+        }]
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

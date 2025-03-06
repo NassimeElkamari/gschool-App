@@ -1,45 +1,146 @@
 <div th:fragment="content" class="container mt-4">
-    <h2>Liste des Filières</h2>
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.85); padding: 16px 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h2 style="font-size: 24px; font-weight: bold; color: #222; margin: 0;">📂 Liste des Filières</h2>
+        <div>
+            <a href="/filieres/new" class="action-btn" style="background: linear-gradient(135deg, #007bff, #0056b3);">+ Ajouter</a>
+            <a href="/filieres/export/excel" class="action-btn" style="background: linear-gradient(135deg, #28a745, #1e7e34);">📊 Excel</a>
+            <a href="/filieres/export/pdf" class="action-btn" style="background: linear-gradient(135deg, #dc3545, #b71c1c);">📄 PDF</a>
+        </div>
+    </div>
 
-    <a href="/filieres/new" class="btn btn-primary mb-3">+ Ajouter Filière</a>
-    <a href="/filieres/export/excel" class="btn btn-success mb-3">Exporter en Excel</a>
-    <a href="/filieres/export/pdf" class="btn btn-danger mb-3">Exporter en PDF</a>
-
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="filiere : ${filieresPage.content}">
-            <td th:text="${filiere.id}"></td>
-            <td th:text="${filiere.nomFiliere}"></td>
-            <td th:text="${filiere.description}"></td>
-            <td>
-                <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}" class="btn btn-warning btn-sm">Modifier</a>
-                <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">Supprimer</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Data Table -->
+    <div class="glass-box">
+        <table class="table table-hover">
+            <thead>
+            <tr style="background: rgba(0, 123, 255, 0.1);">
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Nombre des etudiants</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="filiere : ${filieresPage.content}" class="table-row">
+                <td th:text="${filiere.id}"></td>
+                <td th:text="${filiere.nomFiliere}"></td>
+                <td th:text="${filiere.description}"></td>
+                <td th:text="${filiere.nombre_etudiant}"></td>
+                <td class="text-center">
+                    <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}" class="edit-btn">✏ Modifier</a>
+                    <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="delete-btn">🗑 Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-6">
-        <nav>
-            <ul class="pagination">
-                <li th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/filieres(page=${pageNumber}, size=${filieresPage.size})}"
-                       th:text="${pageNumber}"
-                       class="px-3 py-2 border rounded-lg hover:bg-blue-600 hover:text-white"
-                       th:classappend="${pageNumber == filieresPage.number + 1} ? 'bg-blue-600 text-white' : ''"></a>
-                </li>
-            </ul>
-        </nav>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <ul class="pagination">
+            <li th:each="pageNumber : ${pageNumbers}">
+                <a th:href="@{/filieres(page=${pageNumber}, size=${filieresPage.size})}"
+                   th:text="${pageNumber}"
+                   class="page-link"
+                   th:classappend="${pageNumber == filieresPage.number + 1} ? 'active' : ''"></a>
+            </li>
+        </ul>
     </div>
+
+    <!-- Styles -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
+            margin-top: 20px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        /* Buttons */
+        .action-btn {
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Hover Effects */
+        .table-row {
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .table-row:hover {
+            background: rgba(0, 102, 255, 0.12);
+            transform: scale(1.02);
+        }
+
+        /* Edit & Delete Buttons */
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+        }
+        .edit-btn {
+            background: #ffc107;
+            color: white;
+        }
+        .edit-btn:hover {
+            transform: scale(1.1);
+            background: #e0a800;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            transform: scale(1.1);
+            background: #b71c1c;
+        }
+
+        /* Pagination */
+        .pagination {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+        .page-link {
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            background: #f8f9fa;
+            transition: background 0.3s ease, transform 0.2s ease-in-out;
+            margin-right: 8px;
+        }
+        .page-link:hover {
+            background: #007bff;
+            color: white;
+            transform: scale(1.1);
+        }
+        .active {
+            background: #007bff !important;
+            color: white !important;
+        }
+    </style>
 </div>

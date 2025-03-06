@@ -1,22 +1,19 @@
-<div th:fragment="content">
-    <h2 class="text-3xl font-semibold text-center mb-6">Liste des Étudiants</h2>
+<div th:fragment="content" class="p-6 bg-gray-100 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold text-center mb-4 text-gray-800">Liste des Étudiants</h2>
 
-    <!-- Search Form -->
-    <div class="mb-4">
-        <div class="flex space-x-4">
-            <!-- Search by Name -->
-            <input type="text" id="searchByName" placeholder="Rechercher par nom" class="w-full px-4 py-2 border rounded-lg" oninput="debouncedSearchEtudiants()">
-            <!-- Search by Email -->
-            <input type="text" id="searchByEmail" placeholder="Rechercher par email" class="w-full px-4 py-2 border rounded-lg" oninput="debouncedSearchEtudiants()">
-            <!-- Search by Code -->
-            <input type="text" id="searchByCode" placeholder="Rechercher par code" class="w-full px-4 py-2 border rounded-lg" oninput="debouncedSearchEtudiants()">
+    <!-- 🔍 Search & Filters -->
+    <div class="mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input type="text" id="searchByName" placeholder="Rechercher par nom" class="w-full px-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" oninput="debouncedSearchEtudiants()">
+            <input type="text" id="searchByEmail" placeholder="Rechercher par email" class="w-full px-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" oninput="debouncedSearchEtudiants()">
+            <input type="text" id="searchByCode" placeholder="Rechercher par code" class="w-full px-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" oninput="debouncedSearchEtudiants()">
         </div>
     </div>
 
-    <!-- Sorting Dropdown -->
-    <div class="mb-4">
-        <label for="sortBy" class="block text-gray-700">Trier par:</label>
-        <select id="sortBy" class="w-full px-4 py-2 border rounded-lg" onchange="debouncedSearchEtudiants()">
+    <!-- 📊 Sorting Dropdown -->
+    <div class="mb-3">
+        <label for="sortBy" class="block text-gray-700 text-sm font-medium">Trier par :</label>
+        <select id="sortBy" class="w-full px-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" onchange="debouncedSearchEtudiants()">
             <option value="nom">Nom (A-Z)</option>
             <option value="nom_desc">Nom (Z-A)</option>
             <option value="email">Email (A-Z)</option>
@@ -26,59 +23,63 @@
         </select>
     </div>
 
-    <div class="flex justify-end mb-4">
-        <a href="/etudiants/new" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Ajouter Étudiant</a>
-        <a href="/etudiants/export/excel" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 ml-2">Exporter en Excel</a>
-        <a href="/etudiants/export/pdf" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2">Exporter en PDF</a>
-    </div>
-
-    <!-- Table -->
-    <div id="etudiantsTable">
-        <div class="overflow-x-auto">
-            <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
-                <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="py-2 px-4">Photo</th>
-                    <th class="py-2 px-4">Nom</th>
-                    <th class="py-2 px-4">Prénom</th>
-                    <th class="py-2 px-4">Email</th>
-                    <th class="py-2 px-4">Code</th>
-                    <th class="py-2 px-4">Filière</th>
-                    <th class="py-2 px-4">Actions</th>
-                </tr>
-                </thead>
-                <tbody id="etudiantsBody">
-                <tr th:each="etudiant : ${etudiantsPage.content}" class="border-b hover:bg-gray-100">
-                    <td class="py-2 px-4 text-center">
-                        <img th:src="${etudiant.photo}" alt="Photo" class="w-12 h-12 rounded-full border object-cover aspect-square">
-                    </td>
-                    <td class="py-2 px-4" th:text="${etudiant.nom}"></td>
-                    <td class="py-2 px-4" th:text="${etudiant.prenom}"></td>
-                    <td class="py-2 px-4" th:text="${etudiant.email}"></td>
-                    <td class="py-2 px-4" th:text="${etudiant.codeEtudiant}"></td>
-                    <td class="py-2 px-4" th:text="${etudiant.filiere != null} ? ${etudiant.filiere.nomFiliere} : 'Non Assignée'"></td>
-                    <td class="py-2 px-4 flex space-x-2">
-                        <a th:href="@{/etudiants/edit/{id}(id=${etudiant.id})}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Modifier</a>
-                        <form th:action="@{/etudiants/{id}/delete(id=${etudiant.id})}" th:method="post" class="inline">
-                            <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?');">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <!-- ➕ Action Buttons -->
+    <div class="flex flex-wrap justify-between items-center mb-3">
+        <a href="/etudiants/new" class="bg-blue-600 text-white text-sm px-3 py-1.5 rounded-md hover:bg-blue-700">+ Ajouter Étudiant</a>
+        <div class="flex space-x-2">
+            <a href="/etudiants/export/excel" class="bg-green-600 text-white text-sm px-3 py-1.5 rounded-md hover:bg-green-700">Exporter en Excel</a>
+            <a href="/etudiants/export/pdf" class="bg-red-600 text-white text-sm px-3 py-1.5 rounded-md hover:bg-red-700">Exporter en PDF</a>
         </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-center mt-6">
+    <!-- 📄 Table with Better Visibility -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="w-full text-sm">
+            <thead class="bg-blue-600 text-white text-xs">
+            <tr>
+                <th class="py-2 px-3 w-16">Photo</th>
+                <th class="py-2 px-3">Nom</th>
+                <th class="py-2 px-3">Prénom</th>
+                <th class="py-2 px-3">Email</th>
+                <th class="py-2 px-3">Code</th>
+                <th class="py-2 px-3">Filière</th>
+                <th class="py-2 px-3 text-center w-32">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="etudiantsBody">
+            <tr th:each="etudiant : ${etudiantsPage.content}" class="border-b hover:bg-gray-100">
+                <td class="py-2 px-3 text-center">
+                    <img th:src="${etudiant.photo}" alt="Photo" class="w-10 h-10 rounded-full object-cover">
+                </td>
+                <td class="py-2 px-3 truncate" th:text="${etudiant.nom}"></td>
+                <td class="py-2 px-3 truncate" th:text="${etudiant.prenom}"></td>
+                <td class="py-2 px-3 truncate max-w-[150px]" th:text="${etudiant.email}"></td>
+                <td class="py-2 px-3 text-center" th:text="${etudiant.codeEtudiant}"></td>
+                <td class="py-2 px-3 truncate" th:text="${etudiant.filiere?.nomFiliere ?: 'Non Assignée'}"></td>
+                <td class="py-2 px-3 flex justify-center space-x-1">
+                    <a th:href="@{/etudiants/edit/{id}(id=${etudiant.id})}" class="bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600">Modifier</a>
+                    <form th:action="@{/etudiants/{id}/delete(id=${etudiant.id})}" th:method="post">
+                        <button type="submit" class="bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700"
+                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?');">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 🔄 Pagination -->
+    <div class="flex justify-center mt-4">
         <nav>
-            <ul class="pagination">
+            <ul class="flex space-x-2">
                 <li th:each="pageNumber : ${pageNumbers}">
                     <a th:href="@{/etudiants(page=${pageNumber}, size=${etudiantsPage.size})}"
                        th:text="${pageNumber}"
-                       class="px-3 py-2 border rounded-lg hover:bg-blue-600 hover:text-white"
-                       th:classappend="${pageNumber == etudiantsPage.number + 1} ? 'bg-blue-600 text-white' : ''"></a>
+                       class="px-3 py-1 text-sm border rounded-md hover:bg-blue-600 hover:text-white transition"
+                       th:classappend="${pageNumber == etudiantsPage.number + 1} ? 'bg-blue-600 text-white' : ''">
+                    </a>
                 </li>
             </ul>
         </nav>
