@@ -1,11 +1,14 @@
 package gschool.app.controller;
 
+import gschool.app.entity.Utilisateur;
 import jakarta.servlet.http.HttpServletResponse;
 import gschool.app.entity.Filiere;
 import gschool.app.service.ExportFiliereService;
 import gschool.app.service.FiliereService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,8 @@ public class FiliereController {
     public FiliereController(FiliereService filiereService, ExportFiliereService exportService) {
         this.filiereService = filiereService;
         this.exportService = exportService;
+
+
     }
 
     @GetMapping
@@ -59,6 +64,16 @@ public class FiliereController {
             filiere.setNombre_etudiant(studentCount);  // Assuming you add a `setStudentCount` method in the Filiere class
         }
         model.addAttribute("filieres", filieres);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();  // This now returns nomUtilisateur
+            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
+
+            // Add user info to the model
+            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userEmail", email);
+        }
 
         return "filieres"; // Return the view name
     }

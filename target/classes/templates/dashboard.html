@@ -5,12 +5,28 @@
 <head>
   <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 </head>
 <body>
 <div layout:fragment="content">
   <div th:replace="~{fragments/dashboard/dashboard :: content}"></div>
+
+  <!-- Display User Info -->
+  <header>
+    <nav>
+      <div>
+        <span>👤</span>
+        <span th:text="${userName}"></span> |
+        <span th:text="${userEmail}"></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Dashboard Content -->
+  <div>
+    <h1>Welcome, <span th:text="${userName}"></span></h1>
+    <p>Email: <span th:text="${userEmail}"></span></p>
+  </div>
+
 </div>
 </body>
 </html>

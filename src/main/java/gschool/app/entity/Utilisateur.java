@@ -30,7 +30,6 @@ public class Utilisateur implements UserDetails {
     private String role;
 
     // Getters and Setters
-
     public Integer getId() {
         return id;
     }
@@ -85,7 +84,7 @@ public class Utilisateur implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // Use email as the username
+        return nomUtilisateur; // Use nomUtilisateur as the username
     }
 
     @Override

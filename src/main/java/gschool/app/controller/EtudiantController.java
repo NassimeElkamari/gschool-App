@@ -1,5 +1,6 @@
 package gschool.app.controller;
 
+import gschool.app.entity.Utilisateur;
 import jakarta.servlet.http.HttpServletResponse;
 import gschool.app.entity.Etudiant;
 import gschool.app.entity.Filiere;
@@ -9,6 +10,8 @@ import gschool.app.service.ExportEtudiantService;
 import gschool.app.service.FiliereService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +63,16 @@ public class EtudiantController {
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();
+            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
+
+            // Add user info to the model
+            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userEmail", email);
         }
 
         return "etudiants"; // Return the view name

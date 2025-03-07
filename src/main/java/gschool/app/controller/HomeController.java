@@ -29,13 +29,29 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String ha(Model model) {
+    public String home(Model model) {
+        // Fetch filieres and student count per filiere
         List<Filiere> filieres = filiereRepository.findAll();
         List<String> filiereNames = filieres.stream().map(Filiere::getNomFiliere).collect(Collectors.toList());
         List<Long> etudiantsParFiliere = filieres.stream()
                 .map(filiere -> etudiantRepository.countByFiliere(filiere))
-                .collect(Collectors.toList());        model.addAttribute("nombreEtudiants", etudiantsParFiliere);
+                .collect(Collectors.toList());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();  // This now returns nomUtilisateur
+            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
+
+            // Add user info to the model
+            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userEmail", email);
+        }
+
+        // Add other attributes to the model for filieres and student counts
+        model.addAttribute("nombreEtudiants", etudiantsParFiliere);
         model.addAttribute("filieres", filiereNames);
-        return "dashboard";
+
+        return "layout";  // Your Thymeleaf template
     }
+
 }

@@ -1,44 +1,31 @@
 package gschool.app.controller;
 
-import gschool.app.entity.Etudiant;
-import gschool.app.entity.Filiere;
-import gschool.app.repository.EtudiantRepository;
-import gschool.app.repository.FiliereRepository;
-import gschool.app.repository.UtilisateurRepository;
-import gschool.app.service.EtudiantService;
-import gschool.app.service.FiliereService;
-import org.springframework.beans.factory.annotation.Autowired;
+import gschool.app.entity.Utilisateur;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/dashboard")
 public class DashboardController {
 
-    @Autowired
-    private FiliereService filiereService;
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();  // Get the username (usually email)
+            // Assuming your custom UserDetails class has a getEmail() method
+            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-    @Autowired
-    private EtudiantService etudiantService;
+            // Debugging output
+            System.out.println("Authenticated User: " + username + ", Email: " + email);
 
-    private FiliereRepository filiereRepository;
+            model.addAttribute("userName", username);
+            model.addAttribute("userEmail", email);
+        }
 
-    public DashboardController(FiliereRepository filiereRepository) {
-        this.filiereRepository = filiereRepository;
+        return "dashboard";  // Your Thymeleaf template
     }
 
-    @GetMapping
-    public String ha(Model model) {
-        List<Filiere> filieres = filiereRepository.findAll();
-        List<String> filiereNames = filieres.stream().map(Filiere::getNomFiliere).collect(Collectors.toList());
-        List<Integer> nombreEtudiants = filieres.stream().map(Filiere::getNombre_etudiant).collect(Collectors.toList());
-        model.addAttribute("nombreEtudiants", nombreEtudiants);
-        model.addAttribute("filieres", filiereNames);
-        return "dashboard";
-    }
 }

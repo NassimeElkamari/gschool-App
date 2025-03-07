@@ -6,6 +6,8 @@ import gschool.app.service.ExportUtilisateurService;
 import gschool.app.service.UtilisateurService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,16 @@ public class UtilisateurController {
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();  // This now returns nomUtilisateur
+            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
+
+            // Add user info to the model
+            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userEmail", email);
         }
 
         return "utilisateurs"; // Return the view name
