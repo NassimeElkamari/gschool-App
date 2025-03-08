@@ -25,12 +25,12 @@
             <tr th:each="filiere : ${filieresPage.content}" class="table-row">
                 <td th:text="${filiere.id}"></td>
                 <td th:text="${filiere.nomFiliere}"></td>
-                <td th:text="${filiere.description}"></td>
+                <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${filiere.description}"></td>
                 <td th:text="${filiere.nombre_etudiant}"></td>
-                <td class="text-center">
+                <td class="text-center" style="white-space: nowrap;">
                     <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}" class="edit-btn">✏ Modifier</a>
                     <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="delete-btn"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet filiere ?');">🗑 Supprimer</button>
+                        <button type="submit" class="delete-btn" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet filiere ?');">🗑 Supprimer</button>
                     </form>
                 </td>
             </tr>

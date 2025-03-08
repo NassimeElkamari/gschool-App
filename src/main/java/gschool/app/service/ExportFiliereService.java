@@ -26,7 +26,6 @@ public class ExportFiliereService {
         this.filiereRepository = filiereRepository;
     }
 
-    // Generate PDF
     public byte[] generateFilierePdf() {
         List<Filiere> filieres = filiereRepository.findAll();
 
@@ -35,16 +34,13 @@ public class ExportFiliereService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Add title
             document.add(new Paragraph("Liste des Filières").setBold().setFontSize(18));
 
-            // Create PDF table
             Table table = new Table(3);
             table.addHeaderCell(new Cell().add(new Paragraph("ID")));
             table.addHeaderCell(new Cell().add(new Paragraph("Nom")));
             table.addHeaderCell(new Cell().add(new Paragraph("Description")));
 
-            // Fill the table
             for (Filiere filiere : filieres) {
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(filiere.getId()))));
                 table.addCell(new Cell().add(new Paragraph(filiere.getNomFiliere())));
@@ -60,14 +56,12 @@ public class ExportFiliereService {
         }
     }
 
-    // Generate Excel
     public byte[] generateFiliereExcel() {
         List<Filiere> filieres = filiereRepository.findAll();
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Filières");
 
-            // Create header row
             Row headerRow = sheet.createRow(0);
             String[] columns = {"ID", "Nom", "Description"};
             CellStyle headerStyle = workbook.createCellStyle();
@@ -81,7 +75,6 @@ public class ExportFiliereService {
                 cell.setCellStyle(headerStyle);
             }
 
-            // Fill data rows
             int rowNum = 1;
             for (Filiere filiere : filieres) {
                 Row row = sheet.createRow(rowNum++);

@@ -31,9 +31,8 @@ public class Utilisateur implements UserDetails {
     private String role;
 
     @Column(name = "derniere_connexion")
-    private LocalDateTime derniereConnexion; // New field for last login timestamp
+    private LocalDateTime derniereConnexion;
 
-    // Getters and Setters
     public LocalDateTime getDerniereConnexion() {
         return derniereConnexion;
     }
@@ -42,7 +41,6 @@ public class Utilisateur implements UserDetails {
         this.derniereConnexion = derniereConnexion;
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -83,7 +81,6 @@ public class Utilisateur implements UserDetails {
         this.role = role;
     }
 
-    // UserDetails Methods
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -92,31 +89,31 @@ public class Utilisateur implements UserDetails {
 
     @Override
     public String getPassword() {
-        return motDePasse; // Return the hashed password
+        return motDePasse;
     }
 
     @Override
     public String getUsername() {
-        return nomUtilisateur; // Use nomUtilisateur as the username
+        return nomUtilisateur;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Customize as needed
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Customize as needed
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Customize as needed
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Customize as needed
+        return true;
     }
 }

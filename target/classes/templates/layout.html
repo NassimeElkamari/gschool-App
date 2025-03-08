@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* Global Styles */
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #eef2ff, #d1d5db);
@@ -20,7 +19,6 @@
             flex-direction: column;
         }
 
-        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 100px;
@@ -67,59 +65,59 @@
             font-weight: bold;
         }
 
-        /* Header */
+        /* Header styling */
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
-            backdrop-filter: blur(10px); /* Glassmorphism effect */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            z-index: 1000; /* Ensure it stays on top */
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        /* User Info Section */
+        /* Logo styling */
+        .logo {
+            width: 200px; /* Ajustez la taille du logo selon vos besoins */
+            height: 50px;
+            margin-right: 20px; /* Espace entre le logo et les infos utilisateur */
+        }
+
+        /* User info styling */
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 20px; /* Increased font size */
+            flex-grow: 1; /* Permet à cette section de prendre l'espace disponible */
         }
 
         .user-info i {
-            margin-right: 8px;
+            margin-right: 10px;
         }
 
-        /* Logout Button */
+        .user-info span {
+            margin-right: 10px;
+        }
+
+        /* Logout button styling */
         .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: linear-gradient(135deg, #ff6b6b, #ff4757); /* Gradient red */
+            background: #dc3545;
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 16px; /* Increased font size */
+            padding: 8px 16px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: background 0.3s ease;
         }
 
         .logout-btn:hover {
-            background: linear-gradient(135deg, #ff4757, #ff6b6b); /* Reverse gradient on hover */
-            transform: translateY(-2px); /* Slight lift */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            background: #b71c1c;
         }
 
-        .logout-btn:active {
-            transform: translateY(0); /* Reset lift on click */
+        .logout-btn i {
+            margin-right: 8px;
         }
 
         /* Icons */
@@ -130,7 +128,7 @@
         /* Main Content */
         .main-content {
             margin-left: 300px;
-            margin-top: 100px;
+            margin-top: 5px;
             padding: 30px;
             background: white;
             border-radius: 20px;
@@ -218,15 +216,17 @@
         }
 
         .feature-card p {
-            font-size: 16px; /* Larger font size */
+            font-size: 16px;
             color: #4a5568;
         }
     </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
+    <!-- Logo -->
+    <img src="https://res.cloudinary.com/dynlc9e4r/image/upload/v1741440484/fhvbjox8ddsouxjygwav.png" alt="GSchool Logo" class="logo">
+
     <div class="user-info">
         <!-- User Icon and Name -->
         <i class="fas fa-user-circle text-2xl text-blue-500"></i>
@@ -234,13 +234,13 @@
 
         <!-- Last Connection Time -->
         <span th:if="${derniereConnexion != null}" class="ml-4 text-sm text-gray-600">
-      <i class="fas fa-clock text-gray-500"></i>
-      Dernière connexion : <span th:text="${#temporals.format(derniereConnexion, 'dd/MM/yyyy HH:mm')}"></span>
-    </span>
+            <i class="fas fa-clock text-gray-500"></i>
+            Dernière connexion : <span th:text="${#temporals.format(derniereConnexion, 'dd/MM/yyyy HH:mm')}"></span>
+        </span>
         <span th:if="${derniereConnexion == null}" class="ml-4 text-sm text-gray-600">
-      <i class="fas fa-clock text-gray-500"></i>
-      Dernière connexion : N/A
-    </span>
+            <i class="fas fa-clock text-gray-500"></i>
+            Dernière connexion : N/A
+        </span>
     </div>
 
     <!-- Logout Button -->
@@ -271,16 +271,13 @@
     </ul>
 </aside>
 
-<!-- Main Content -->
 <div class="main-content">
     <div th:if="${currentPage == 'home'}">
-        <!-- Welcome Section -->
         <div class="welcome-section">
             <h1>👋 Bienvenue sur votre tableau de bord, <span th:text="${userName}"></span> !</h1>
             <p>Gérez facilement vos données et accédez rapidement aux fonctionnalités essentielles.</p>
         </div>
 
-        <!-- Features Section -->
         <div class="features">
             <div class="feature-card">
                 <i class="fas fa-chart-line"></i>
@@ -300,7 +297,6 @@
         </div>
     </div>
     <div id="content" layout:fragment="content">
-        <!-- Dynamic content will be inserted here -->
     </div>
 </div>
 

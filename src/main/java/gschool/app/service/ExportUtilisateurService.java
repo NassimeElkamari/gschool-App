@@ -25,7 +25,6 @@ public class ExportUtilisateurService {
     }
 
 
-    // Generate PDF for Utilisateurs
     public byte[] generateUtilisateurPdf() {
         List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
 
@@ -34,17 +33,14 @@ public class ExportUtilisateurService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Add title
             document.add(new Paragraph("Liste des Utilisateurs").setBold().setFontSize(18));
 
-            // Create PDF table
             Table table = new Table(4); // 4 columns: ID, Nom, Email, Rôle
             table.addHeaderCell(new Cell().add(new Paragraph("ID")));
             table.addHeaderCell(new Cell().add(new Paragraph("Nom")));
             table.addHeaderCell(new Cell().add(new Paragraph("Email")));
             table.addHeaderCell(new Cell().add(new Paragraph("Rôle")));
 
-            // Fill the table
             for (Utilisateur utilisateur : utilisateurs) {
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(utilisateur.getId()))));
                 table.addCell(new Cell().add(new Paragraph(utilisateur.getNomUtilisateur())));
@@ -61,14 +57,12 @@ public class ExportUtilisateurService {
         }
     }
 
-    // Generate Excel for Utilisateurs
     public byte[] generateUtilisateurExcel() {
         List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Utilisateurs");
 
-            // Create header row
             Row headerRow = sheet.createRow(0);
             String[] columns = {"ID", "Nom", "Email", "Rôle"};
             CellStyle headerStyle = workbook.createCellStyle();
@@ -82,7 +76,6 @@ public class ExportUtilisateurService {
                 cell.setCellStyle(headerStyle);
             }
 
-            // Fill data rows
             int rowNum = 1;
             for (Utilisateur utilisateur : utilisateurs) {
                 Row row = sheet.createRow(rowNum++);

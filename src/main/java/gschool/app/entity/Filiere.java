@@ -18,12 +18,8 @@ public class Filiere {
     private String description;
 
     @Transient
-    private Integer nombre_etudiant; // Add this field to store student count
+    private Integer nombre_etudiant;
 
-    // Getter and Setter for studentCount
-    public Integer getNombre_etudiant() {
-        return nombre_etudiant;
-    }
 
     public void setNombre_etudiant(Integer nombre_etudiant) {
         this.nombre_etudiant = nombre_etudiant;
@@ -53,4 +49,7 @@ public class Filiere {
         this.description = description;
     }
 
+    public Integer getNombre_etudiant() {
+        return nombre_etudiant;
+    }
 }

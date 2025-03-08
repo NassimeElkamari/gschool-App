@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <!-- Font Awesome for Icons -->
+    <title>Login - GSchool</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* General body styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to top right, #91d474, #8fec6d);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,20 +20,26 @@
             position: relative;
         }
 
-        /* Login container */
         .login-container {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
             padding: 40px;
-            max-width: 420px;
+            max-width: 400px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(15px);
-            animation: slideIn 1s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.8s ease-out;
             position: relative;
+            overflow: hidden;
+            text-align: center;
         }
 
-        /* Title styling */
+        .logo {
+            width: 300px;
+            height: 100px;
+            animation: fadeIn 1s ease-out;
+        }
+
         h2 {
             text-align: center;
             font-weight: 600;
@@ -46,33 +49,54 @@
             animation: fadeIn 1s ease-out;
         }
 
-        /* Input styling */
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
         .form-control {
             background: #f0f4f8;
             border: 1px solid #ddd;
             color: #333;
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 12px 15px;
             margin-bottom: 20px;
             width: 100%;
             transition: all 0.3s ease-in-out;
+            font-size: 14px;
         }
 
         .form-control:focus {
-            border-color: #5e72e4;
-            box-shadow: 0 0 8px rgba(94, 114, 228, 0.6);
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.6);
         }
 
         .form-label {
-            color: #4f5d73;
+            position: absolute;
+            top: 20%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 14px;
             font-weight: 500;
+            transition: all 0.3s ease;
+            color: #aaa;
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .form-control:focus + .form-label,
+        .form-control:not(:placeholder-shown) + .form-label {
+            font-size: 12px;
+            color: #667eea;
+            transform: translateY(-30px);
+            opacity: 1;
         }
 
         /* Button styling */
         .btn-primary {
-            background-color: #5e72e4;
+            background-color: #667eea;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px;
             font-size: 16px;
             font-weight: 600;
@@ -80,22 +104,32 @@
             transition: all 0.3s ease-in-out;
             color: white;
             width: 100%;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-primary:hover {
-            background-color: #4353c7;
-            box-shadow: 0 4px 15px rgba(79, 93, 115, 0.6);
+            background-color: #5a6fd1;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
         .btn-primary:active {
-            background-color: #2f3a91;
+            background-color: #4a5bb8;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         /* Floating animated elements */
         .icon {
             position: absolute;
             font-size: 120px;
-            color: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.1);
             animation: float 6s ease-in-out infinite;
         }
 
@@ -112,7 +146,7 @@
         /* Keyframes for animations */
         @keyframes slideIn {
             from {
-                transform: translateY(-1000px);
+                transform: translateY(-50px);
                 opacity: 0;
             }
             to {
@@ -142,61 +176,6 @@
             }
         }
 
-        /* Form group for proper alignment */
-        .form-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        /* Label that appears above input */
-        .form-group .form-label {
-            position: absolute;
-            top: 0;
-            left: 15px;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            color: #aaa;
-            opacity: 0.75;
-            transform: translateY(0);
-        }
-
-        .form-group .form-control:focus + .form-label,
-        .form-group .form-control:not(:placeholder-shown) + .form-label {
-            font-size: 12px;
-            color: #5e72e4;
-            transform: translateY(-20px);
-            opacity: 1;
-        }
-
-        /* Footer section */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #aaa;
-            font-size: 14px;
-            animation: fadeInFooter 1s ease-out;
-        }
-
-        .footer a {
-            color: #5e72e4;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .footer a:hover {
-            color: #2575fc;
-        }
-
-        @keyframes fadeInFooter {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
     </style>
 </head>
 <body>
@@ -206,7 +185,14 @@
 
 <!-- Login Form -->
 <div class="login-container">
+    <!-- Logo -->
+    <img src="https://res.cloudinary.com/dynlc9e4r/image/upload/v1741440484/fhvbjox8ddsouxjygwav.png" alt="GSchool Logo" class="logo">
+
     <h2>Welcome Back, Please Login</h2>
+
+    <!-- Afficher le message d'erreur ici -->
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
     <form th:action="@{/login}" method="post">
         <div class="form-group">
             <input type="email" class="form-control" id="email" name="username" required placeholder=" ">
@@ -231,16 +217,16 @@
     // Add animation for form elements
     document.querySelectorAll('.form-control').forEach((input) => {
         input.addEventListener('focus', function() {
-            input.parentElement.querySelector('.form-label').style.transform = 'translateY(-20px)';
+            input.parentElement.querySelector('.form-label').style.transform = 'translateY(-30px)';
             input.parentElement.querySelector('.form-label').style.opacity = '1';
             input.parentElement.querySelector('.form-label').style.fontSize = '12px';
-            input.parentElement.querySelector('.form-label').style.color = '#5e72e4';
+            input.parentElement.querySelector('.form-label').style.color = '#667eea';
         });
         input.addEventListener('blur', function() {
             if (input.value === '') {
-                input.parentElement.querySelector('.form-label').style.transform = 'translateY(0)';
+                input.parentElement.querySelector('.form-label').style.transform = 'translateY(-50%)';
                 input.parentElement.querySelector('.form-label').style.opacity = '0.75';
-                input.parentElement.querySelector('.form-label').style.fontSize = '16px';
+                input.parentElement.querySelector('.form-label').style.fontSize = '14px';
                 input.parentElement.querySelector('.form-label').style.color = '#aaa';
             }
         });

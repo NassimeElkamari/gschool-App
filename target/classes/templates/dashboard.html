@@ -218,14 +218,11 @@
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="user-info">
-    <!-- User Icon and Name -->
     <i class="fas fa-user-circle text-2xl text-blue-500"></i>
     <span class="aa font-semibold text-gray-800" th:text="${userName}">Utilisateur</span>
 
-    <!-- Last Connection Time -->
     <span th:if="${derniereConnexion != null}" class="ml-4 text-sm text-gray-600 aa">
             <i class="fas fa-clock text-gray-500"></i>
             Dernière connexion : <span class="aa" th:text="${#temporals.format(derniereConnexion, 'dd/MM/yyyy HH:mm')}"></span>
@@ -236,7 +233,6 @@
         </span>
   </div>
 
-  <!-- Logout Button -->
   <form method="post" th:action="@{/logout}">
     <button type="submit" class="logout-btn">
       <i class="fas fa-sign-out-alt"></i> Déconnexion
@@ -264,12 +260,9 @@
   </ul>
 </aside>
 
-<!-- Main Content -->
 <div class="main-content">
-  <!-- Big Title -->
   <h1 class="big-title">Tableau de Bord de Gestion Scolaire</h1>
 
-  <!-- Cards -->
   <div class="cards-container">
     <div class="card">
       <h3>Étudiants</h3>
@@ -285,36 +278,30 @@
     </div>
   </div>
 
-  <!-- Charts -->
   <div class="charts-container">
-    <!-- Column Chart Container -->
     <div id="columnChart"></div>
 
-    <!-- Pie Chart Container -->
     <div id="ageChart"></div>
   </div>
 
-  <!-- Thymeleaf Template: Inline JavaScript -->
   <script th:inline="javascript">
-    // Dataset 1: Student distribution by filiere
+
     var filieres = /*[[${filieres}]]*/ [];
     var nombreEtudiants = /*[[${nombreEtudiants}]]*/ [];
 
-    // Dataset 2: Student age distribution
     var ageGroups = /*[[${ageGroups}]]*/ [];
     var ageCounts = /*[[${ageCounts}]]*/ [];
 
-    // Column Chart (Student Distribution by Filiere)
     Highcharts.chart('columnChart', {
       chart: {
         type: 'column',
-        width: 500, /* Reduced width */
-        height: 250 /* Reduced height */
+        width: 500,
+        height: 250
       },
       title: {
         text: 'Répartition des Étudiants par Filière',
         style: {
-          fontSize: '20px' /* Reduced title font size */
+          fontSize: '20px'
         }
       },
       xAxis: {
@@ -322,7 +309,7 @@
         crosshair: true,
         labels: {
           style: {
-            fontSize: '14px' /* Reduced X-axis label font size */
+            fontSize: '14px'
           }
         }
       },
@@ -331,17 +318,17 @@
         title: {
           text: 'Nombre d\'Étudiants',
           style: {
-            fontSize: '14px' /* Reduced Y-axis title font size */
+            fontSize: '14px'
           }
         },
         labels: {
           style: {
-            fontSize: '14px' /* Reduced Y-axis label font size */
+            fontSize: '14px'
           }
         }
       },
       tooltip: {
-        headerFormat: '<span style="font-size: 14px">{point.key}</span><table>', /* Reduced tooltip header font size */
+        headerFormat: '<span style="font-size: 14px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
                 '<td style="padding:0"><b>{point.y}</b></td></tr>',
         footerFormat: '</table>',

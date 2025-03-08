@@ -32,13 +32,8 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
 
     Page<Etudiant> findAll(Pageable pageable);
 
-    // Count the number of students in a specific filière
     @Query("SELECT COUNT(e) FROM Etudiant e WHERE e.filiere = :filiere")
     long countByFiliere(@Param("filiere") Filiere filiere);
-
-    // Fetch the 5 most recent students
-    @Query("SELECT e FROM Etudiant e ORDER BY e.id DESC LIMIT 5")
-    List<Etudiant> findTop5ByOrderByIdDesc();
 
     Integer countByFiliereId(Integer filiereId);
 

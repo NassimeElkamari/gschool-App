@@ -43,17 +43,13 @@ public class UtilisateurController {
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
 
-        // Set default page size (2 rows per page)
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        // Fetch paginated data
         Page<Utilisateur> utilisateurPage = utilisateurService.getUtilisateurs(PageRequest.of(currentPage - 1, pageSize));
 
-        // Add data to the model
         model.addAttribute("utilisateursPage", utilisateurPage);
 
-        // Calculate total pages for pagination links
         int totalPages = utilisateurPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -64,30 +60,28 @@ public class UtilisateurController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            String username = authentication.getName();  // This now returns nomUtilisateur
+            String username = authentication.getName();
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-            // Fetch the current user's last connection time
             Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
 
-            // Add user info to the model
-            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userName", username);
             model.addAttribute("userEmail", email);
-            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
+            model.addAttribute("derniereConnexion", derniereConnexion);
         }
 
         model.addAttribute("currentPage", "utilisateurs");
 
 
-        return "utilisateurs"; // Return the view name
+        return "/utilisateurs/utilisateurs";
     }
 
     @GetMapping("/new")
     public String createUtilisateurForm(Model model) {
         model.addAttribute("utilisateur", new Utilisateur());
-        return "add_utilisateur";
+        return "/utilisateurs/add_utilisateur";
     }
 
     @PostMapping("/save")
@@ -99,7 +93,7 @@ public class UtilisateurController {
     @GetMapping("/edit/{id}")
     public String editUtilisateurForm(@PathVariable Integer id, Model model) {
         model.addAttribute("utilisateur", utilisateurService.getUtilisateurById(id));
-        return "edit_utilisateur"; // Return the full view name
+        return "/utilisateurs/edit_utilisateur";
     }
 
     @PostMapping("/{id}")
@@ -127,7 +121,6 @@ public class UtilisateurController {
         return "redirect:/utilisateurs";
     }
 
-    // Export PDF for Utilisateurs
     @GetMapping("/export/pdf")
     public void exportPdf(HttpServletResponse response) {
         try {
@@ -142,7 +135,6 @@ public class UtilisateurController {
         }
     }
 
-    // Export Excel for Utilisateurs
     @GetMapping("/export/excel")
     public void exportExcel(HttpServletResponse response) {
         try {

@@ -24,8 +24,6 @@ public class ExportEtudiantService {
         this.etudiantRepository = etudiantRepository;
     }
 
-
-    // Generate PDF for Etudiants
     public byte[] generateEtudiantPdf() {
         List<Etudiant> etudiants = etudiantRepository.findAll();
 
@@ -34,18 +32,15 @@ public class ExportEtudiantService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Add title
             document.add(new Paragraph("Liste des Étudiants").setBold().setFontSize(18));
 
-            // Create PDF table
-            Table table = new Table(5); // 6 columns: Photo, Nom, Prénom, Email, Code, Filière
+            Table table = new Table(5);
             table.addHeaderCell(new Cell().add(new Paragraph("Nom")));
             table.addHeaderCell(new Cell().add(new Paragraph("Prénom")));
             table.addHeaderCell(new Cell().add(new Paragraph("Email")));
             table.addHeaderCell(new Cell().add(new Paragraph("Code")));
             table.addHeaderCell(new Cell().add(new Paragraph("Filière")));
 
-            // Fill the table
             for (Etudiant etudiant : etudiants) {
                 table.addCell(new Cell().add(new Paragraph(etudiant.getNom())));
                 table.addCell(new Cell().add(new Paragraph(etudiant.getPrenom())));
@@ -63,14 +58,12 @@ public class ExportEtudiantService {
         }
     }
 
-    // Generate Excel for Etudiants
     public byte[] generateEtudiantExcel() {
         List<Etudiant> etudiants = etudiantRepository.findAll();
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Étudiants");
 
-            // Create header row
             Row headerRow = sheet.createRow(0);
             String[] columns = {"Photo", "Nom", "Prénom", "Email", "Code", "Filière"};
             CellStyle headerStyle = workbook.createCellStyle();
@@ -84,7 +77,6 @@ public class ExportEtudiantService {
                 cell.setCellStyle(headerStyle);
             }
 
-            // Fill data rows
             int rowNum = 1;
             for (Etudiant etudiant : etudiants) {
                 Row row = sheet.createRow(rowNum++);

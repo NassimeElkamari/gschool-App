@@ -16,17 +16,12 @@ public class EtudiantService {
         this.etudiantRepository = etudiantRepository;
     }
 
-    // Updated method to support pagination
     public Page<Etudiant> searchEtudiants(String name, String email, String code, String sort, Pageable pageable) {
         return etudiantRepository.searchEtudiants(name, email, code, sort, pageable);
     }
 
     public List<Etudiant> getAllEtudiants() {
         return etudiantRepository.findAll();
-    }
-
-    public Page<Etudiant> getEtudiants(Pageable pageable) {
-        return etudiantRepository.findAll(pageable);
     }
 
     public Etudiant getEtudiantById(Integer id) {

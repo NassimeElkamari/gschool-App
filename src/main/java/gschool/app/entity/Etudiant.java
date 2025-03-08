@@ -25,7 +25,7 @@ public class Etudiant {
     @Column(name = "date_naissance")
     private String dateNaissance;
 
-    @JsonIgnore // This prevents lazy-loaded associations from being serialized
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "filiere_id")
     private Filiere filiere;

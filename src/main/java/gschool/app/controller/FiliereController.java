@@ -43,17 +43,13 @@ public class FiliereController {
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size) {
 
-        // Set default page size (2 rows per page)
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        // Fetch paginated data
         Page<Filiere> filierePage = filiereService.getFilieres(PageRequest.of(currentPage - 1, pageSize));
 
-        // Add data to the model
         model.addAttribute("filieresPage", filierePage);
 
-        // Calculate total pages for pagination links
         int totalPages = filierePage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -62,40 +58,37 @@ public class FiliereController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        // Add the number of students for each Filiere
         List<Filiere> filieres = filierePage.getContent();
         for (Filiere filiere : filieres) {
             Integer studentCount = filiereService.getNumberOfStudentsInFiliere(filiere.getId());
-            filiere.setNombre_etudiant(studentCount);  // Assuming you add a `setStudentCount` method in the Filiere class
+            filiere.setNombre_etudiant(studentCount);
         }
         model.addAttribute("filieres", filieres);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            String username = authentication.getName();  // This now returns nomUtilisateur
+            String username = authentication.getName();
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-            // Fetch the current user's last connection time
             Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
 
-            // Add user info to the model
-            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userName", username);
             model.addAttribute("userEmail", email);
-            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
+            model.addAttribute("derniereConnexion", derniereConnexion);
         }
 
         model.addAttribute("currentPage", "filieres");
 
-        return "filieres"; // Return the view name
+        return "/filieres/filieres";
     }
 
 
     @GetMapping("/new")
     public String createFiliereForm(Model model) {
         model.addAttribute("filiere", new Filiere());
-        return "add_filiere"; // Return the full view name
+        return "/filieres/add_filiere";
     }
 
     @PostMapping("/save")
@@ -107,7 +100,7 @@ public class FiliereController {
     @GetMapping("/edit/{id}")
     public String editFiliereForm(@PathVariable Integer id, Model model) {
         model.addAttribute("filiere", filiereService.getFiliereById(id));
-        return "edit_filiere"; // Return the full view name
+        return "/filieres/edit_filiere";
     }
 
     @PostMapping("/{id}")
@@ -140,7 +133,6 @@ public class FiliereController {
         }
     }
 
-    // Export Excel
     @GetMapping("/export/excel")
     public void exportExcel(HttpServletResponse response) {
         try {

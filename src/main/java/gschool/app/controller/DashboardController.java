@@ -39,43 +39,39 @@ public class DashboardController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            String username = authentication.getName();  // This now returns nomUtilisateur
+            String username = authentication.getName();
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-            // Fetch the current user's last connection time
             Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
 
-            // Add user info to the model
-            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userName", username);
             model.addAttribute("userEmail", email);
-            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
+            model.addAttribute("derniereConnexion", derniereConnexion);
         }
-        // Dataset 1: Student count by filiere
         List<Object[]> studentCountsByFiliere = etudiantService.getStudentCountByFiliere();
         String[] filieres = new String[studentCountsByFiliere.size()];
         Integer[] nombreEtudiants = new Integer[studentCountsByFiliere.size()];
 
         for (int i = 0; i < studentCountsByFiliere.size(); i++) {
-            filieres[i] = (String) studentCountsByFiliere.get(i)[0]; // Filiere name
-            nombreEtudiants[i] = ((Long) studentCountsByFiliere.get(i)[1]).intValue(); // Student count
+            filieres[i] = (String) studentCountsByFiliere.get(i)[0];
+            nombreEtudiants[i] = ((Long) studentCountsByFiliere.get(i)[1]).intValue();
         }
 
-        // Dataset 2: Student age distribution
         List<Etudiant> allStudents = etudiantService.getAllEtudiants();
         Map<String, Long> ageDistribution = allStudents.stream()
                 .collect(Collectors.groupingBy(
                         student -> {
                             String dateNaissance = student.getDateNaissance();
                             if (dateNaissance == null || dateNaissance.isEmpty()) {
-                                return "Unknown"; // Handle missing or invalid dates
+                                return "Unknown";
                             }
                             try {
                                 int age = AgeCalculator.calculateAge(dateNaissance);
                                 return getAgeGroup(age);
                             } catch (Exception e) {
-                                return "Unknown"; // Handle parsing errors
+                                return "Unknown";
                             }
                         },
                         Collectors.counting()
@@ -84,12 +80,10 @@ public class DashboardController {
         String[] ageGroups = ageDistribution.keySet().toArray(new String[0]);
         Long[] ageCounts = ageDistribution.values().toArray(new Long[0]);
 
-        // Fetch counts for Etudiants, Filieres, and Utilisateurs
         long etudiantCount = etudiantService.getAllEtudiants().size();
         long filiereCount = filiereService.getFilieres().size();
         long utilisateurCount = utilisateurService.getUtilisateurs().size();
 
-        // Add data to the model
         model.addAttribute("filieres", filieres);
         model.addAttribute("nombreEtudiants", nombreEtudiants);
         model.addAttribute("ageGroups", ageGroups);
@@ -98,10 +92,9 @@ public class DashboardController {
         model.addAttribute("filiereCount", filiereCount);
         model.addAttribute("utilisateurCount", utilisateurCount);
 
-        return "dashboard"; // The name of your Thymeleaf template
+        return "dashboard";
     }
 
-    // Helper method to group students into age ranges
     private String getAgeGroup(int age) {
         if (age >= 18 && age <= 20) {
             return "18-20 ans";

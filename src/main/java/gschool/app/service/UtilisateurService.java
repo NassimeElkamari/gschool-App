@@ -27,14 +27,6 @@ public class UtilisateurService {
         return utilisateurRepository.findAll();
     }
 
-    public Utilisateur findByEmail(String email) {
-        return utilisateurRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
-    }
-    public boolean checkPassword(Utilisateur utilisateur, String rawPassword) {
-        return passwordEncoder.matches(rawPassword, utilisateur.getMotDePasse());
-    }
-
     public void saveUtilisateur(Utilisateur utilisateur) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         utilisateur.setMotDePasse(encoder.encode(utilisateur.getMotDePasse()));

@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,19 +48,19 @@ public class EtudiantController {
     public String listEtudiants(
             Model model,
             @RequestParam("page") Optional<Integer> page,
-            @RequestParam("size") Optional<Integer> size) {
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "sort", required = false) String sort) {
 
-        // Set default page size (2 rows per page)
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
 
-        // Fetch paginated data
-        Page<Etudiant> etudiantPage = etudiantService.getEtudiants(PageRequest.of(currentPage - 1, pageSize));
+        Page<Etudiant> etudiantPage = etudiantService.searchEtudiants(name, email, code, sort, PageRequest.of(currentPage - 1, pageSize));
 
-        // Add data to the model
         model.addAttribute("etudiantsPage", etudiantPage);
 
-        // Calculate total pages for pagination links
         int totalPages = etudiantPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -72,26 +69,28 @@ public class EtudiantController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        model.addAttribute("name", name);
+        model.addAttribute("email", email);
+        model.addAttribute("code", code);
+        model.addAttribute("sort", sort);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             String username = authentication.getName();
-            String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
+            String emailUser = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-            // Fetch the current user's last connection time
             Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
 
-            // Add user info to the model
-            model.addAttribute("userName", username);  // This is the user's name now
-            model.addAttribute("userEmail", email);
-            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
+            model.addAttribute("userName", username);
+            model.addAttribute("userEmail", emailUser);
+            model.addAttribute("derniereConnexion", derniereConnexion);
         }
 
         model.addAttribute("currentPage", "etudiants");
 
-
-        return "etudiants"; // Return the view name
+        return "/etudiants/etudiants";
     }
 
 
@@ -123,7 +122,7 @@ public class EtudiantController {
         existingEtudiant.setNom(etudiant.getNom());
         existingEtudiant.setPrenom(etudiant.getPrenom());
         existingEtudiant.setEmail(etudiant.getEmail());
-        existingEtudiant.setDateNaissance(etudiant.getDateNaissance()); // Save as String
+        existingEtudiant.setDateNaissance(etudiant.getDateNaissance());
         existingEtudiant.setCodeEtudiant(etudiant.getCodeEtudiant());
         existingEtudiant.setFiliere(filiere);
 
@@ -162,32 +161,20 @@ public class EtudiantController {
 
     @GetMapping("/new")
     public String createEtudiantForm(Model model) {
-        model.addAttribute("etudiant", new Etudiant()); // Add an empty Etudiant object
-        model.addAttribute("filieres", filiereService.getFilieres()); // Add filieres for the dropdown
-        return "add_etudiant"; // Return the full view name
+        model.addAttribute("etudiant", new Etudiant());
+        model.addAttribute("filieres", filiereService.getFilieres());
+        return "/etudiants/add_etudiant";
     }
 
     @GetMapping("/edit/{id}")
     public String editEtudiantForm(@PathVariable Integer id, Model model) {
-        Etudiant etudiant = etudiantService.getEtudiantById(id); // Fetch the student by ID
-
-        // Ensure the date is in the correct format (if needed)
-        if (etudiant.getDateNaissance() != null) {
-            // If the date is already in YYYY-MM-DD format, no need to reformat
-            // Otherwise, parse and reformat it
-        }
-
-        model.addAttribute("etudiant", etudiant); // Add the student to the model
-        model.addAttribute("filieres", filiereService.getFilieres()); // Add filieres for the dropdown
-        return "edit_etudiant"; // Return the full view name
-    }
-
-    @GetMapping("/{id}/delete")
-    public String confirmDelete(@PathVariable Integer id, Model model) {
         Etudiant etudiant = etudiantService.getEtudiantById(id);
+
         model.addAttribute("etudiant", etudiant);
-        return "fragments/etudiant/delete_etudiant";
+        model.addAttribute("filieres", filiereService.getFilieres());
+        return "/etudiants/edit_etudiant";
     }
+
 
     @PostMapping("/{id}/delete")
     public String deleteEtudiant(@PathVariable Integer id) {
@@ -195,7 +182,6 @@ public class EtudiantController {
         return "redirect:/etudiants";
     }
 
-    // Export PDF for Etudiants
     @GetMapping("/export/pdf")
     public void exportPdf(HttpServletResponse response) {
         try {
@@ -210,7 +196,6 @@ public class EtudiantController {
         }
     }
 
-    // Export Excel for Etudiants
     @GetMapping("/export/excel")
     public void exportExcel(HttpServletResponse response) {
         try {

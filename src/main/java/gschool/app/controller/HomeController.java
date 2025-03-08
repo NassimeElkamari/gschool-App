@@ -31,7 +31,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        // Fetch filieres and student count per filiere
+
         List<Filiere> filieres = filiereRepository.findAll();
         List<String> filiereNames = filieres.stream().map(Filiere::getNomFiliere).collect(Collectors.toList());
         List<Long> etudiantsParFiliere = filieres.stream()
@@ -40,26 +40,23 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            String username = authentication.getName();  // This now returns nomUtilisateur
+            String username = authentication.getName();
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
-            // Fetch the current user's last connection time
             Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
 
-            // Add user info to the model
-            model.addAttribute("userName", username);  // This is the user's name now
+            model.addAttribute("userName", username);
             model.addAttribute("userEmail", email);
-            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
+            model.addAttribute("derniereConnexion", derniereConnexion);
         }
 
-        // Add other attributes to the model for filieres and student counts
         model.addAttribute("nombreEtudiants", etudiantsParFiliere);
         model.addAttribute("filieres", filiereNames);
         model.addAttribute("currentPage", "home");
 
-        return "layout";  // Your Thymeleaf template
+        return "layout";
     }
 
 }
