@@ -1,15 +1,26 @@
-<div th:fragment="content">
-    <h2>Ajouter une Filière</h2>
+<div th:fragment="content" class="container mt-4">
+    <!-- Header -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">📂 Ajouter une Filière</h2>
+    </div>
 
-    <form th:action="@{/filieres/save}" th:object="${filiere}" method="post">
-        <div class="mb-3">
-            <label for="nomFiliere" class="form-label">Nom de la Filière</label>
-            <input type="text" id="nomFiliere" th:field="*{nomFiliere}" class="form-control">
+    <!-- Form -->
+    <form th:action="@{/filieres/save}" th:object="${filiere}" method="post" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <!-- Nom de la Filière -->
+        <div class="mb-6">
+            <label for="nomFiliere" class="block text-sm font-medium text-gray-700 mb-2">Nom de la Filière</label>
+            <input type="text" id="nomFiliere" th:field="*{nomFiliere}" class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" placeholder="Entrez le nom de la filière" required />
         </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+
+        <!-- Description -->
+        <div class="mb-6">
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea id="description" th:field="*{description}" class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" placeholder="Entrez la description de la filière" rows="4" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-2.5 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 transition-all">
+            Enregistrer
+        </button>
     </form>
 </div>

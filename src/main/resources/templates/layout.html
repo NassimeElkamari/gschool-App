@@ -1,95 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title>Magical Dashboard</title>
+    <title>Tableau de Bord</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <!-- FontAwesome CDN for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        /* === Global Styles === */
+        /* Global Styles */
         body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #d1d5db);
+            color: #2d3748;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #e2e8f0);
-            color: #2d3748;
-            overflow: hidden;
-        }
-
-        /* === Floating Animated Blobs === */
-        body::before,
-        body::after {
-            content: '';
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-            z-index: -1;
-            animation: moveBlobs 20s infinite alternate ease-in-out;
-        }
-
-        body::before {
-            top: -100px;
-            left: -100px;
-        }
-
-        body::after {
-            bottom: -100px;
-            right: -100px;
-            background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
-        }
-
-        @keyframes moveBlobs {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(20px, 20px);
-            }
-        }
-
-        /* === Glass Morphism Header === */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 30px;
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
         }
 
-        .header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-        }
-
-        .header .user-info a {
-            color: #4a5568;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .header .user-info a:hover {
-            color: #2b6cb0;
-        }
-
-        /* === Dynamic Sidebar === */
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 100px;
@@ -122,6 +53,7 @@
             text-decoration: none;
             border-radius: 10px;
             transition: all 0.3s ease;
+            font-size: 18px; /* Increased font size */
         }
 
         .sidebar a:hover {
@@ -130,116 +62,247 @@
         }
 
         .sidebar a.active {
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-            color: #2b6cb0;
+            background: linear-gradient(135deg, #4f46e5, #6d28d9);
+            color: white;
             font-weight: bold;
         }
 
-        /* === Main Content with Floating Cards === */
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            z-index: 1000; /* Ensure it stays on top */
+        }
+
+        /* User Info Section */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px; /* Increased font size */
+        }
+
+        .user-info i {
+            margin-right: 8px;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757); /* Gradient red */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px; /* Increased font size */
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ff4757, #ff6b6b); /* Reverse gradient on hover */
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+        }
+
+        .logout-btn:active {
+            transform: translateY(0); /* Reset lift on click */
+        }
+
+        /* Icons */
+        .fas {
+            font-size: 20px; /* Increased icon size */
+        }
+
+        /* Main Content */
         .main-content {
             margin-left: 300px;
             margin-top: 100px;
             padding: 30px;
-            min-height: calc(100vh - 100px);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transform: translateY(20px);
-            opacity: 0;
-            animation: fadeInUp 0.5s forwards 1s;
+            animation: fadeIn 1s ease-in-out;
+            flex: 1; /* Take full height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
         }
 
-        @keyframes fadeInUp {
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .main-content .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            padding: 60px 40px;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #4f46e5, #6d28d9);
+            color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 40px;
+            animation: slideIn 1s ease-in-out;
         }
 
-        .main-content .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* === Interactive Animations === */
-        .sidebar,
-        .main-content {
-            transition: transform 0.3s ease, opacity 0.3s ease;
+        .welcome-section h1 {
+            font-size: 48px; /* Larger font size */
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: bounce 1.5s infinite alternate;
         }
 
-        .sidebar:hover,
-        .main-content:hover {
-            transform: scale(1.02);
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .welcome-section p {
+            font-size: 20px; /* Larger font size */
+            margin-bottom: 0;
+        }
+
+        /* Features Section */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card i {
+            font-size: 48px; /* Larger icons */
+            margin-bottom: 20px;
+            color: #4f46e5; /* Icon color */
+        }
+
+        .feature-card h3 {
+            font-size: 24px; /* Larger font size */
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .feature-card p {
+            font-size: 16px; /* Larger font size */
+            color: #4a5568;
         }
     </style>
 </head>
 <body>
-<div class="header glass flex justify-between items-center px-6  shadow-md bg-white bg-opacity-80 rounded-lg">
-    <!-- Image instead of Title -->
-    <img src="https://res.cloudinary.com/dynlc9e4r/image/upload/v1741322681/af60suzt2knbnqiqiwlj.png" alt="Dashboard Icon" width="50px" height="50px"  />
 
-    <!-- User Info and Logout Section (Aligned in Row) -->
-    <div class="flex items-center gap-6">
-        <!-- User Info with Icons -->
-        <div class="flex items-center gap-4">
-            <i class="fas fa-user-circle text-2xl text-gray-700"></i> <!-- User Icon -->
-            <div class="text-right">
-                <p class="text-md font-medium text-gray-800 inline-block mr-2" th:text="${userName}"></p>
-                <p class="text-sm text-gray-600 inline-block" th:text="${userEmail}"></p>
-            </div>
+<!-- Header -->
+<div class="header">
+    <div class="user-info">
+        <!-- User Icon and Name -->
+        <i class="fas fa-user-circle text-2xl text-blue-500"></i>
+        <span class="text-lg font-semibold text-gray-800" th:text="${userName}">Utilisateur</span>
+
+        <!-- Last Connection Time -->
+        <span th:if="${derniereConnexion != null}" class="ml-4 text-sm text-gray-600">
+      <i class="fas fa-clock text-gray-500"></i>
+      Dernière connexion : <span th:text="${#temporals.format(derniereConnexion, 'dd/MM/yyyy HH:mm')}"></span>
+    </span>
+        <span th:if="${derniereConnexion == null}" class="ml-4 text-sm text-gray-600">
+      <i class="fas fa-clock text-gray-500"></i>
+      Dernière connexion : N/A
+    </span>
+    </div>
+
+    <!-- Logout Button -->
+    <form method="post" th:action="@{/logout}">
+        <button type="submit" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </button>
+    </form>
+</div>
+
+<aside class="sidebar">
+    <ul>
+        <li>
+            <a th:href="@{/}" th:classappend="${currentPage == 'home'} ? 'active'">🏠 Accueil</a>
+        </li>
+        <li>
+            <a th:href="@{/dashboard}" th:classappend="${currentPage == 'statistiques'} ? 'active'">📊 Statistiques</a>
+        </li>
+        <li>
+            <a th:href="@{/filieres}" th:classappend="${currentPage == 'filieres'} ? 'active'">📚 Filières</a>
+        </li>
+        <li>
+            <a th:href="@{/etudiants}" th:classappend="${currentPage == 'etudiants'} ? 'active'">👨‍🎓 Étudiants</a>
+        </li>
+        <li>
+            <a th:href="@{/utilisateurs}" th:classappend="${currentPage == 'utilisateurs'} ? 'active'">👥 Utilisateurs</a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div th:if="${currentPage == 'home'}">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>👋 Bienvenue sur votre tableau de bord, <span th:text="${userName}"></span> !</h1>
+            <p>Gérez facilement vos données et accédez rapidement aux fonctionnalités essentielles.</p>
         </div>
 
-        <!-- Logout Button with Icon -->
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="flex items-center gap-2 text-red-600 hover:text-red-800 font-semibold">
-                <i class="fas fa-sign-out-alt"></i> <!-- Logout Icon -->
-                <span>Logout</span>
-            </button>
-        </form>
+        <!-- Features Section -->
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Statistiques</h3>
+                <p>Consultez les performances et rapports en un clin d'œil.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Étudiants</h3>
+                <p>Gérez et suivez facilement vos étudiants.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Filieres</h3>
+                <p>Personnalisez et configurez votre espace.</p>
+            </div>
+        </div>
     </div>
-</div>
-
-
-<div class="sidebar glass">
-    <ul>
-        <li><a href="/dashboard" class="nav-link">📊 Dashboard</a></li>
-        <li><a href="/filieres" class="nav-link">📚 Filieres</a></li>
-        <li><a href="/etudiants" class="nav-link">🎓 Etudiants</a></li>
-        <li><a href="/utilisateurs" class="nav-link">👤 Utilisateurs</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
     <div id="content" layout:fragment="content">
         <!-- Dynamic content will be inserted here -->
     </div>
 </div>
 
-<script>
-
-    // Handle logout
-    document.getElementById("logoutLink").addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent the default link behavior
-
-        if (confirm("Are you sure you want to log out?")) {
-            // Clear localStorage
-            localStorage.removeItem("userData");
-
-            // Redirect to the login page
-            window.location.href = "/login";
-        }
-    });
-</script>
 </body>
 </html>

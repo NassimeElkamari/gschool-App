@@ -23,7 +23,7 @@ public class Etudiant {
     private String email;
 
     @Column(name = "date_naissance")
-    private LocalDate dateNaissance;
+    private String dateNaissance;
 
     @JsonIgnore // This prevents lazy-loaded associations from being serialized
     @ManyToOne(fetch = FetchType.EAGER)
@@ -68,11 +68,11 @@ public class Etudiant {
         this.email = email;
     }
 
-    public LocalDate getDateNaissance() {
+    public String getDateNaissance() {
         return dateNaissance;
     }
 
-    public void setDateNaissance(LocalDate dateNaissance) {
+    public void setDateNaissance(String dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
 

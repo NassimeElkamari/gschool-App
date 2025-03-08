@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,14 +43,21 @@ public class HomeController {
             String username = authentication.getName();  // This now returns nomUtilisateur
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
+            // Fetch the current user's last connection time
+            Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
+
             // Add user info to the model
             model.addAttribute("userName", username);  // This is the user's name now
             model.addAttribute("userEmail", email);
+            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
         }
 
         // Add other attributes to the model for filieres and student counts
         model.addAttribute("nombreEtudiants", etudiantsParFiliere);
         model.addAttribute("filieres", filiereNames);
+        model.addAttribute("currentPage", "home");
 
         return "layout";  // Your Thymeleaf template
     }

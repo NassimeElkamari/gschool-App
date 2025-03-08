@@ -24,10 +24,11 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
             "CASE WHEN :sort = 'email_desc' THEN e.email END DESC, " +
             "CASE WHEN :sort = 'code' THEN e.codeEtudiant END ASC, " +
             "CASE WHEN :sort = 'code_desc' THEN e.codeEtudiant END DESC")
-    List<Etudiant> searchEtudiants(@Param("name") String name,
+    Page<Etudiant> searchEtudiants(@Param("name") String name,
                                    @Param("email") String email,
                                    @Param("code") String code,
-                                   @Param("sort") String sort);
+                                   @Param("sort") String sort,
+                                   Pageable pageable);
 
     Page<Etudiant> findAll(Pageable pageable);
 
@@ -43,7 +44,5 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
 
     @Query("SELECT e.filiere.nomFiliere, COUNT(e) FROM Etudiant e GROUP BY e.filiere")
     List<Object[]> countStudentsByFiliere();
-
-
 }
 

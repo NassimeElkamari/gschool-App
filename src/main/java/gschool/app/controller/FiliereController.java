@@ -1,6 +1,7 @@
 package gschool.app.controller;
 
 import gschool.app.entity.Utilisateur;
+import gschool.app.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import gschool.app.entity.Filiere;
 import gschool.app.service.ExportFiliereService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +26,15 @@ public class FiliereController {
 
     private final FiliereService filiereService;
     private final ExportFiliereService exportService;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public FiliereController(FiliereService filiereService, ExportFiliereService exportService) {
+
+    public FiliereController(FiliereService filiereService, ExportFiliereService exportService, UtilisateurRepository utilisateurRepository) {
         this.filiereService = filiereService;
         this.exportService = exportService;
 
 
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @GetMapping
@@ -40,7 +45,7 @@ public class FiliereController {
 
         // Set default page size (2 rows per page)
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(2);
+        int pageSize = size.orElse(5);
 
         // Fetch paginated data
         Page<Filiere> filierePage = filiereService.getFilieres(PageRequest.of(currentPage - 1, pageSize));
@@ -70,10 +75,18 @@ public class FiliereController {
             String username = authentication.getName();  // This now returns nomUtilisateur
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
+            // Fetch the current user's last connection time
+            Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
+
             // Add user info to the model
             model.addAttribute("userName", username);  // This is the user's name now
             model.addAttribute("userEmail", email);
+            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
         }
+
+        model.addAttribute("currentPage", "filieres");
 
         return "filieres"; // Return the view name
     }

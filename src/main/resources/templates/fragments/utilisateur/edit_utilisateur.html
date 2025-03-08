@@ -1,23 +1,40 @@
 <div th:fragment="content" class="container mt-4">
-    <h2>Modifier l'Utilisateur</h2>
+    <!-- Header -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">👤 Modifier l'Utilisateur</h2>
+    </div>
 
-    <form th:action="@{/utilisateurs/{id}(id=${utilisateur.id})}" method="post" th:object="${utilisateur}">
-        <div class="form-group">
-            <label>Nom</label>
-            <input type="text" class="form-control" th:field="*{nomUtilisateur}" required>
+    <!-- Form -->
+    <form th:action="@{/utilisateurs/{id}(id=${utilisateur.id})}" method="post" th:object="${utilisateur}" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <!-- Nom -->
+        <div class="mb-6">
+            <label for="nomUtilisateur" class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+            <input type="text" id="nomUtilisateur" th:field="*{nomUtilisateur}" class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" placeholder="Entrez le nom" required />
         </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" class="form-control" th:field="*{email}" required>
+
+        <!-- Email -->
+        <div class="mb-6">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input type="email" id="email" th:field="*{email}" class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" placeholder="Entrez l'email" required />
         </div>
-        <div class="form-group">
-            <label>Rôle</label>
-            <select class="form-control" th:field="*{role}">
+
+        <!-- Rôle -->
+        <div class="mb-6">
+            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
+            <select id="role" th:field="*{role}" class="w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none">
                 <option value="ADMIN">Admin</option>
                 <option value="USER">Utilisateur</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-warning">Modifier</button>
-        <a href="/utilisateurs" class="btn btn-secondary">Annuler</a>
+
+        <!-- Buttons -->
+        <div class="flex space-x-4">
+            <button type="submit" class="w-full py-2.5 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 transition-all">
+                Modifier
+            </button>
+            <a href="/utilisateurs" class="w-full py-2.5 px-4 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 text-center transition-all">
+                Annuler
+            </a>
+        </div>
     </form>
 </div>

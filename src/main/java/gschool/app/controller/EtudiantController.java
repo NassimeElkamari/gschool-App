@@ -1,6 +1,7 @@
 package gschool.app.controller;
 
 import gschool.app.entity.Utilisateur;
+import gschool.app.repository.UtilisateurRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import gschool.app.entity.Etudiant;
 import gschool.app.entity.Filiere;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,13 +36,15 @@ public class EtudiantController {
     private final FiliereService filiereService;
     private final CloudinaryService cloudinaryService;
     private final ExportEtudiantService exportService;
+    private final UtilisateurRepository utilisateurRepository;
 
 
-    public EtudiantController(EtudiantService etudiantService, FiliereService filiereService, CloudinaryService cloudinaryService, ExportEtudiantService exportService) {
+    public EtudiantController(EtudiantService etudiantService, FiliereService filiereService, CloudinaryService cloudinaryService, ExportEtudiantService exportService, UtilisateurRepository utilisateurRepository) {
         this.etudiantService = etudiantService;
         this.filiereService = filiereService;
         this.cloudinaryService = cloudinaryService;
         this.exportService = exportService;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @GetMapping
@@ -48,7 +55,7 @@ public class EtudiantController {
 
         // Set default page size (2 rows per page)
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(2);
+        int pageSize = size.orElse(5);
 
         // Fetch paginated data
         Page<Etudiant> etudiantPage = etudiantService.getEtudiants(PageRequest.of(currentPage - 1, pageSize));
@@ -70,10 +77,19 @@ public class EtudiantController {
             String username = authentication.getName();
             String email = ((Utilisateur) authentication.getPrincipal()).getEmail();
 
+            // Fetch the current user's last connection time
+            Utilisateur utilisateur = utilisateurRepository.findByNomUtilisateur(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            LocalDateTime derniereConnexion = utilisateur.getDerniereConnexion();
+
             // Add user info to the model
             model.addAttribute("userName", username);  // This is the user's name now
             model.addAttribute("userEmail", email);
+            model.addAttribute("derniereConnexion", derniereConnexion); // Add last connection time
         }
+
+        model.addAttribute("currentPage", "etudiants");
+
 
         return "etudiants"; // Return the view name
     }
@@ -107,7 +123,7 @@ public class EtudiantController {
         existingEtudiant.setNom(etudiant.getNom());
         existingEtudiant.setPrenom(etudiant.getPrenom());
         existingEtudiant.setEmail(etudiant.getEmail());
-        existingEtudiant.setDateNaissance(etudiant.getDateNaissance());
+        existingEtudiant.setDateNaissance(etudiant.getDateNaissance()); // Save as String
         existingEtudiant.setCodeEtudiant(etudiant.getCodeEtudiant());
         existingEtudiant.setFiliere(filiere);
 
@@ -126,11 +142,15 @@ public class EtudiantController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
             Model model,
             @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
 
-        List<Etudiant> etudiants = etudiantService.searchEtudiants(name, email, code, sort);
-        model.addAttribute("etudiants", etudiants);
+        System.out.println("Search Parameters - Name: " + name + ", Email: " + email + ", Code: " + code + ", Sort: " + sort);
+
+        Page<Etudiant> etudiantsPage = etudiantService.searchEtudiants(name, email, code, sort, PageRequest.of(page, size));
+        model.addAttribute("etudiantsPage", etudiantsPage);
 
         if ("XMLHttpRequest".equals(requestedWith)) {
             return "fragments/etudiant/etudiants :: #etudiantsBody";
@@ -150,6 +170,13 @@ public class EtudiantController {
     @GetMapping("/edit/{id}")
     public String editEtudiantForm(@PathVariable Integer id, Model model) {
         Etudiant etudiant = etudiantService.getEtudiantById(id); // Fetch the student by ID
+
+        // Ensure the date is in the correct format (if needed)
+        if (etudiant.getDateNaissance() != null) {
+            // If the date is already in YYYY-MM-DD format, no need to reformat
+            // Otherwise, parse and reformat it
+        }
+
         model.addAttribute("etudiant", etudiant); // Add the student to the model
         model.addAttribute("filieres", filiereService.getFilieres()); // Add filieres for the dropdown
         return "edit_etudiant"; // Return the full view name

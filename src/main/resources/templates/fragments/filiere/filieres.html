@@ -30,7 +30,7 @@
                 <td class="text-center">
                     <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}" class="edit-btn">✏ Modifier</a>
                     <form th:action="@{/filieres/{id}/delete(id=${filiere.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="delete-btn">🗑 Supprimer</button>
+                        <button type="submit" class="delete-btn"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet filiere ?');">🗑 Supprimer</button>
                     </form>
                 </td>
             </tr>

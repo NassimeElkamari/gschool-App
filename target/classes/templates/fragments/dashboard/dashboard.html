@@ -1,94 +1,88 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta charset="ISO-8859-1" />
+  <title>Dashboard</title>
 
-  <title>Tableau de bord</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
+  <!-- Include Bootstrap for styling -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+
+  <!-- Include Highcharts library for charting -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+  <style>
+    /* Add your custom styles here */
+    #container {
+      width: 80%;
+      height: 400px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
 <body>
-
-<h1>Tableau de bord</h1>
-
+<!-- This is the fragment declaration -->
 <div th:fragment="content">
-  <div>
-    <h2>Répartition des Filières</h2>
-    <canvas id="pieChart"></canvas>
+  <div class="container">
+    <h2 align="center">Student Distribution by Filiere</h2>
+
+    <!-- Chart Container -->
+    <div id="container" style="width: 80%; height: 400px; margin: 0 auto"></div>
   </div>
 
-  <div>
-    <h2> Étudiants par Filière</h2>
-    <canvas id="barChart"></canvas>
-  </div>
+  <!-- Thymeleaf Template: Inline JavaScript -->
+  <script th:inline="javascript">
+    // Thymeleaf expressions to pass data from Java to JavaScript
+    var filieres = /*[[${filieres}]]*/ [];
+    var nombreEtudiants = /*[[${nombreEtudiants}]]*/ [];
+
+    // Ensure data is passed correctly (for debugging)
+    console.log("Filieres:", filieres);
+    console.log("Nombre d'Etudiants:", nombreEtudiants);
+
+    // Create Highcharts chart with the passed data
+    Highcharts.chart('container', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Distribution of Students by Filiere'
+      },
+      xAxis: {
+        categories: filieres,  // Filiere labels for the X axis
+        crosshair: true
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Number of Students'
+        }
+      },
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0
+        }
+      },
+      series: [{
+        name: 'Students',
+        data: nombreEtudiants  // Data for the Y axis (number of students)
+      }]
+    });
+  </script>
+
+  <!-- Include jQuery and Bootstrap JS (optional) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </div>
-
-<script th:inline="javascript">
-  let predefinedColors = [
-    '#ff5733', // Rouge orangé
-    '#33ff57', // Vert clair
-    '#3357ff', // Bleu vif
-    '#ff33a8', // Rose flashy
-    '#ffcc33', // Jaune doré
-    '#8d33ff', // Violet
-    '#33fff5', // Bleu turquoise
-    '#ff3380', // Rose foncé
-    '#80ff33', // Vert lime
-    '#ff8233'  // Orange chaud
-  ];
-
-  function generateRandomColors(count, existingColors) {
-    let colors = [...existingColors];
-    while (colors.length < count) {
-      let color = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`; // Ajustement de luminosité
-      colors.push(color);
-    }
-    return colors;
-  }
-
-  var labels = [[${filieres}]];
-  var dataValues = [[${nombreEtudiants}]];
-  var colors = generateRandomColors(labels.length, predefinedColors);
-
-  // Graphique en camembert
-  const ctx1 = document.getElementById('pieChart').getContext('2d');
-  new Chart(ctx1, {
-    type: 'pie',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: dataValues,
-        backgroundColor: colors,
-      }]
-    }
-  });
-
-  // Graphique en barres
-  const ctx2 = document.getElementById('barChart').getContext('2d');
-  new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Nombre des Étudiants',
-        data: dataValues,
-        backgroundColor: colors
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        yAxes: [{
-          ticks: { beginAtZero: true }
-        }]
-      }
-    }
-  });
-</script>
-
 </body>
 </html>

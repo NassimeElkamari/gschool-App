@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -28,6 +29,18 @@ public class Utilisateur implements UserDetails {
 
     @Column(name = "role", nullable = false, length = 50)
     private String role;
+
+    @Column(name = "derniere_connexion")
+    private LocalDateTime derniereConnexion; // New field for last login timestamp
+
+    // Getters and Setters
+    public LocalDateTime getDerniereConnexion() {
+        return derniereConnexion;
+    }
+
+    public void setDerniereConnexion(LocalDateTime derniereConnexion) {
+        this.derniereConnexion = derniereConnexion;
+    }
 
     // Getters and Setters
     public Integer getId() {

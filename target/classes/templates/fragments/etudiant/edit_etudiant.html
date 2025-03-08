@@ -2,37 +2,32 @@
     <h2>Modifier Étudiant</h2>
 
     <form th:action="@{/etudiants/{id}(id=${etudiant.id})}" th:object="${etudiant}" method="post" enctype="multipart/form-data">
-        <!-- Nom -->
+
         <div class="mb-3">
             <label class="form-label">Nom</label>
             <input type="text" class="form-control" th:field="*{nom}" required/>
         </div>
 
-        <!-- Prénom -->
         <div class="mb-3">
             <label class="form-label">Prénom</label>
             <input type="text" class="form-control" th:field="*{prenom}" required/>
         </div>
 
-        <!-- Email -->
         <div class="mb-3">
             <label class="form-label">Email</label>
             <input type="email" class="form-control" th:field="*{email}" required/>
         </div>
 
-        <!-- Date de Naissance -->
         <div class="mb-3">
             <label class="form-label">Date de Naissance</label>
             <input type="date" class="form-control" th:field="*{dateNaissance}" required/>
         </div>
 
-        <!-- Code Étudiant -->
         <div class="mb-3">
             <label class="form-label">Code Étudiant</label>
             <input type="text" class="form-control" th:field="*{codeEtudiant}" required/>
         </div>
 
-        <!-- Filière (Dropdown) -->
         <div class="mb-3">
             <label class="form-label">Filière</label>
             <select class="form-select" name="filiere" required>
@@ -45,19 +40,16 @@
             </select>
         </div>
 
-        <!-- Photo Actuelle -->
         <div class="mb-3">
             <label class="form-label">Photo Actuelle</label><br>
             <img th:src="${etudiant.photo}" alt="Photo de l'étudiant" class="img-thumbnail" style="width: 150px; height: 150px;">
         </div>
 
-        <!-- Nouvelle Photo -->
         <div class="mb-3">
             <label class="form-label">Changer la Photo</label>
             <input type="file" class="form-control" name="file" accept="image/*" />
         </div>
 
-        <!-- Buttons -->
         <button type="submit" class="btn btn-primary">Enregistrer</button>
         <a href="/etudiants" class="btn btn-secondary">Annuler</a>
     </form>
